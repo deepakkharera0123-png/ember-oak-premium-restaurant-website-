@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Menu & Drinks // Ember & Oak</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Cart Drawer Overlay & Drawer -->
+  <div class="cart-drawer-overlay" id="cart-drawer-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <div class="drawer-title-wrap">
+        <svg class="cart-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <h3>Your Order Tray</h3>
+      </div>
+      <button class="cart-drawer-close" id="cart-drawer-close" aria-label="Close cart">&times;</button>
+    </div>
+
+    <div class="cart-items-body" id="cart-items-body"></div>
+
+    <div class="cart-drawer-footer" id="cart-drawer-footer">
+      <div class="drawer-bill-summary">
+        <div class="bill-line">
+          <span>Estimated Total:</span>
+          <strong id="drawer-total-price">₹0</strong>
+        </div>
+      </div>
+
+      <form class="drawer-checkout-form" id="drawer-checkout-form">
+        <div class="form-group">
+          <label for="order-type">Dining Preference</label>
+          <select id="order-type">
+            <option value="Dine-In (Table Order)">Dine-In (Table Order)</option>
+            <option value="Takeaway / Self-Pickup">Takeaway / Self-Pickup</option>
+            <option value="Home Delivery">Home Delivery</option>
+          </select>
+        </div>
+
+        <div class="form-grid-two">
+          <div class="form-group">
+            <label for="order-name">Your Name</label>
+            <input type="text" id="order-name" placeholder="Full name" required>
+          </div>
+          <div class="form-group">
+            <label for="order-location">Table # / Delivery Address</label>
+            <input type="text" id="order-location" placeholder="Table 4 / Sector 14" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="order-phone">Phone Number</label>
+          <input type="tel" id="order-phone" placeholder="10-digit mobile number" required>
+        </div>
+
+        <div class="form-group">
+          <label for="order-notes">Kitchen Notes</label>
+          <input type="text" id="order-notes" placeholder="Less spicy, extra dip...">
+        </div>
+
+        <button type="submit" class="btn-checkout-direct">Confirm & Place Order</button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- Instant Order Confirmation Receipt Modal -->
+  <div class="order-success-modal" id="order-success-modal">
+    <div class="success-card">
+      <div class="success-icon-wrap">
+        <svg class="check-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <span class="sub-title">ORDER RECEIVED</span>
+      <h3>Sent to Kitchen!</h3>
+      <p class="order-id-text" id="receipt-order-id">Order #EO-8492</p>
+      <div class="receipt-summary" id="receipt-summary-box"></div>
+      <p class="prep-estimate">Estimated Kitchen Time: <strong>20 - 25 Mins</strong></p>
+      <button class="btn-primary full-width" id="btn-close-receipt">Done</button>
+    </div>
+  </div>
+
+  <header>
+    <div class="head">
+      <a href="index.html" class="logo">Ember & Oak</a>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+      <nav class="nav" id="nav-menu">
+        <a href="index.html">home</a>
+        <a href="menu.html" class="active">full menu</a>
+        <a href="reservation.html">reserve table</a>
+        <a href="index.html#contact">contact</a>
+      </nav>
+      <button class="nav-cart-btn" id="nav-cart-trigger" aria-label="View Cart">
+        <svg class="cart-nav-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="cart-badge-count" id="header-cart-badge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="page-banner">
+    <div class="banner-content">
+      <span class="sub-title">CULINARY EXCELLENCE</span>
+      <h1>The Full Menu</h1>
+      <p>Wood-fired grilling, farm-fresh produce, and crafted seasonal specialties.</p>
+    </div>
+  </section>
+
+  <!-- Complete Menu Section -->
+  <section class="menu-section">
+    <div class="container">
+      <div class="menu-category">
+        <button class="menu-buttons active" data-category="all">all</button>
+        <button class="menu-buttons" data-category="starters">starters</button>
+        <button class="menu-buttons" data-category="mains">mains</button>
+        <button class="menu-buttons" data-category="desserts">desserts</button>
+        <button class="menu-buttons" data-category="beverages">beverages</button>
+      </div>
+
+      <div class="menu-dishes" id="menu-dishes">
+        <!-- Starters -->
+        <article class="menu-dish" data-category="starters">
+          <img src="https://images.pexels.com/photos/17433337/pexels-photo-17433337.jpeg" alt="Artisanal Vada Pav">
+          <div class="dish-info">
+            <div class="dish-head">
+              <p class="dish-name">Artisanal Vada Pav</p>
+              <p class="menu-dish-price">₹149</p>
+            </div>
+            <p class="menu-p-1">spiced potato . garlic chutney . butter brioche</p>
+            <button class="btn-add-cart" data-id="dish-1" data-name="Artisanal Vada Pav" data-price="149">
+              <span class="plus-sign">+</span> Add to Order
+            </button>
+          </div>
+        </article>
+
+        <article class="menu-dish" data-category="starters">
+          <img src="https://images.pexels.com/photos/29685056/pexels-photo-29685056.jpeg" alt="Smoked Malai Paneer">
+          <div class="dish-info">
+            <div class="dish-head">
+              <p class="dish-name">Smoked Malai Paneer</p>
+              <p class="menu-dish-price">₹249</p>
+            </div>
+            <p class="menu-p-1">chargrilled cottage cheese . mint glaze</p>
+            <button class="btn-add-cart" data-id="dish-2" data-name="Smoked Malai Paneer" data-price="249">
+              <span class="plus-sign">+</span> Add to Order
+            </button>
+          </div>
+        </article>
+
+        <article class="menu-dish" data-category="starters">
+          <img src="https://images.pexels.com/photos/31596394/pexels-photo-31596394.jpeg" alt="Crisp Cheese Burst Rounds">
+          <div class="dish-info">
+            <div class="dish-head">
+              <p class="dish-name">Crisp Cheese Burst Rounds</p>
+              <p class="menu-dish-price">₹279</p>
+            </div>
+            <p class="menu-p-1">aged cheddar . herbs . spicy arrabbiata</p>
+            <button class="btn-add-cart" data-id="dish-7" data-name="Crisp Cheese Rounds" data-price="279">
+              <span class="plus-sign">+</span> Add to Order
+            </button>
+          </div>
+        </article>
+
+        <!-- Mains -->
+        <article class="menu-dish" data-category="mains">
+          <img src="https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?q=80&w=600&auto=format&fit=crop" alt="Wild Mushroom Risotto">
+          <div class="dish-info">
+            <div class="dish-head">
+              <p class="dish-name">Wild Mushroom Risotto</p>
+              <p class="menu-dish-price">₹349</p>
+            </div>
+            <p class="menu-p-1">arborio rice . porcini . parmesan glaze</p>
+            <button class="btn-add-cart" data-id="dish-3" data-name="Wild Mushroom Risotto" data-price="349">
+              <span class="plus-sign">+</span> Add to Order
+            </button>
+          </div>
+        </article>
+
+        <article class="menu-dish" data-category="mains">
+          <img src="https://images.unsplash.com/photo-1532550907401-a500c9a57435?q=80&w=600&auto=format&fit=crop" alt="Herb-Crusted Chicken">
+          <div class="dish-info">
+            <div class="dish-head">
+              <p class="dish-name">Herb-Crusted Chicken</p>
+              <p class="menu-dish-price">₹449</p>
+            </div>
+            <p class="menu-p-1">roasted breast . steam broccoli . pan jus</p>
+            <button class="btn-add-cart" data-id="dish-4" data-name="Herb-Crusted Chicken" data-price="449">
+              <span class="plus-sign">+</span> Add to Order
+            </button>
+          </div>
+        </article>
+
+        <article class="menu-dish" data-category="mains">
+          <img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=600&auto=format&fit=crop" alt="Pan-Seared Salmon">
+          <div class="dish-info">
+            <div class="dish-head">
+              <p class="dish-name">Pan-Seared Salmon</p>
+              <p class="menu-dish-price">₹599</p>
+            </div>
+            <p class="menu-p-1">lemon herb butter . char asparagus</p>
+            <button class="btn-add-cart" data-id="dish-8" data-name="Pan-Seared Salmon" data-price="599">
+              <span class="plus-sign">+</span> Add to Order
+            </button>
+          </div>
+        </article>
+
+        <article class="menu-dish" data-category="mains">
+          <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?q=80&w=600&auto=format&fit=crop" alt="Ember Feast Platter">
+          <div class="dish-info">
+            <div class="dish-head">
+              <p class="dish-name">Ember Royal Platter</p>
+              <p class="menu-dish-price">₹499</p>
+            </div>
+            <p class="menu-p-1">royal curries . butter naan . saffron rice</p>
+            <button class="btn-add-cart" data-id="dish-5" data-name="Ember Royal Platter" data-price="499">
+              <span class="plus-sign">+</span> Add to Order
+            </button>
+          </div>
+        </article>
+
+        <!-- Desserts -->
+        <article class="menu-dish" data-category="desserts">
+          <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=600&auto=format&fit=crop" alt="Belgian Chocolate Lava">
+          <div class="dish-info">
+            <div class="dish-head">
+              <p class="dish-name">Belgian Chocolate Lava</p>
+              <p class="menu-dish-price">₹219</p>
+            </div>
+            <p class="menu-p-1">molten core . vanilla bean dust</p>
+            <button class="btn-add-cart" data-id="dish-6" data-name="Belgian Chocolate Lava" data-price="219">
+              <span class="plus-sign">+</span> Add to Order
+            </button>
+          </div>
+        </article>
+
+        <article class="menu-dish" data-category="desserts">
+          <img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?q=80&w=600&auto=format&fit=crop" alt="Classic Tiramisu">
+          <div class="dish-info">
+            <div class="dish-head">
+              <p class="dish-name">Classic Tiramisu</p>
+              <p class="menu-dish-price">₹259</p>
+            </div>
+            <p class="menu-p-1">espresso ladyfingers . mascarpone cream</p>
+            <button class="btn-add-cart" data-id="dish-9" data-name="Classic Tiramisu" data-price="259">
+              <span class="plus-sign">+</span> Add to Order
+            </button>
+          </div>
+        </article>
+
+        <!-- Beverages -->
+        <article class="menu-dish" data-category="beverages">
+          <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=600&auto=format&fit=crop" alt="Smoked Berry Mocktail">
+          <div class="dish-info">
+            <div class="dish-head">
+              <p class="dish-name">Smoked Berry Fizz</p>
+              <p class="menu-dish-price">₹189</p>
+            </div>
+            <p class="menu-p-1">wild berries . smoked rosemary . tonic</p>
+            <button class="btn-add-cart" data-id="dish-10" data-name="Smoked Berry Fizz" data-price="189">
+              <span class="plus-sign">+</span> Add to Order
+            </button>
+          </div>
+        </article>
+
+        <article class="menu-dish" data-category="beverages">
+          <img src="https://images.unsplash.com/photo-1517256064527-09c73fc73e38?q=80&w=600&auto=format&fit=crop" alt="Single Origin Cold Brew">
+          <div class="dish-info">
+            <div class="dish-head">
+              <p class="dish-name">Artisanal Cold Brew</p>
+              <p class="menu-dish-price">₹169</p>
+            </div>
+            <p class="menu-p-1">18-hr slow steep . cinnamon hint</p>
+            <button class="btn-add-cart" data-id="dish-11" data-name="Artisanal Cold Brew" data-price="169">
+              <span class="plus-sign">+</span> Add to Order
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom Floating Pill in Full Menu -->
+  <div class="floating-cart-pill" id="floating-cart-pill">
+    <div class="pill-left">
+      <span class="pill-count-badge" id="pill-count-badge">0 items</span>
+      <span class="pill-total-text" id="pill-total-text">₹0</span>
+    </div>
+    <div class="pill-right">
+      <span>View Order Tray</span>
+      <svg class="arrow-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-block">
+        <a href="index.html" class="logo">Ember & Oak</a>
+        <p>An upscale casual dining experience celebrating rich flavors and fire-cooked gastronomy.</p>
+      </div>
+      <div class="footer-block">
+        <h4>Opening Hours</h4>
+        <p>Mon – Sun: 12:00 PM – 11:30 PM</p>
+      </div>
+      <div class="footer-block">
+        <h4>Table Concierge</h4>
+        <p>+91 89305 79023</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
